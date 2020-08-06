@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category;
+use App\Category;
 
 class Product extends Model
 {
@@ -20,11 +20,11 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'avatar', 'name', 'description'
+        'name', 'description', 'avatar'
     ];
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsToMany(Category::class);
     }
 }

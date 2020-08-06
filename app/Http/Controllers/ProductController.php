@@ -4,26 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
-use App\Services\ProductService;
-use App\Models\Product;
+use App\Product;
+use App\Category;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
-    /**
-     * @var ProductService
-     */
-    private $productService;
-
-    /**
-     * ProductController constructor.
-     * @param ProductService $productService
-     */
-    public function __construct(ProductService $productService)
+    public function create(Request $request)
     {
-        $this->productService = $productService;
+        $productCategories = Category::all();
+        
+        $params = [
+            'title' => 'Add New Product',
+            'productCategories' => $productCategories,
+        ];
+        return view('products.create')->with($params);
     }
-
+    
     /**
      * List of all products
      *
@@ -31,13 +28,15 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::orderBy('id');
+        // $products = Product::orderBy('id');
 
-        if ($request->has('category_id')) {
-            $products = $products->where('category_id', $request->get('category_id'));
-        }
+        $products = Product::all();
 
-        return $products->paginate(50);
+        $params = [
+            'title' => 'Products Listing',
+            'products' => $products,
+        ];
+        return view('products.view')->with($params);
     }
 
     /**
@@ -48,55 +47,97 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product = new Product();
+        $product = new Product;
 
         if ($request->hasFile('avatar')) {
-            $this->productService->uploadAvatar($request, $product);
+            $fileName = str_random(30);
+            $extension = $request->avatar->extension();
+            $fullFileName = "{$fileName}.{$extension}";
+
+            if ($request->avatar->storeAs('public/avatars', $fullFileName)) {
+                $product->avatar = $fullFileName;
+            }else{
+                $product->avatar = "product.jpg";
+            }
+        }else{
+            $product->avatar = "product.jpg";
         }
 
-        $this->productService->saveProduct($request, $product);
+        $product->name = $request->name;
+        $product->description = $request->description;
+
+        $product->save();
+
+        $categories = $request->input('categories');
         
-        return response($product, Response::HTTP_CREATED);
-    }
-
-    /**
-     * Show specific product
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function show($id)
-    {
-        return Product::with('category')->findOrFail($id);
-    }
-
-    /**
-     * Update specific product
-     *
-     * @param ProductRequest $request
-     * @param $id
-     * @return Response
-     */
-    public function update(ProductRequest $request, $id)
-    {
-        $product = Product::findOrFail($id);
-
-        if ($request->hasFile('avatar')) {
-            $this->productService->deleteCurrentAvatar($product);
-            $this->productService->uploadAvatar($request, $product);
+        $counter = 0; 
+        $categories_list = '';
+        foreach ($categories as $key => $value) {
+            if( $counter == 0 ){
+                $categories_list = $value;
+            }else{
+                $categories .= ", " .  $value;
+                $categories_list .= ", " .  $value;
+            }
+            $counter++;
         }
 
-        $this->productService->saveProduct($request, $product);
+        $category = Category::find([$categories_list]); // [1, 2]
+        $product->categories()->attach($category);
 
-        return response($product, Response::HTTP_CREATED);
+        return 'Success';
+
+        // ===
     }
 
-    public function destroy($id)
+
+
+
+
+
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
-
-        $this->productService->deleteCurrentAvatar($product);
-
-        Product::destroy($id);
+       return view('products.show', compact('product'));
     }
+
+    // /**
+    //  * Update specific product
+    //  *
+    //  * @param ProductRequest $request
+    //  * @param $id
+    //  * @return Response
+    //  */
+    // public function update(ProductRequest $request, $id)
+    // {
+    //     $product = Product::findOrFail($id);
+
+    //     if ($request->hasFile('avatar')) {
+    //         $this->productService->deleteCurrentAvatar($product);
+    //         $this->productService->uploadAvatar($request, $product);
+    //     }
+
+    //     $this->productService->saveProduct($request, $product);
+
+    //     return response($product, Response::HTTP_CREATED);
+    // }
+
+    // public function destroy($id)
+    // {
+    //     $product = Product::findOrFail($id);
+
+    //     $this->productService->deleteCurrentAvatar($product);
+
+    //     Product::destroy($id);
+    // }
+
+
+    public function removeCategory(Product $product)
+    {
+            $category = Category::find(2);
+
+            $product->categories()->detach($category);
+            
+            return 'Success';
+    }
+
 }
