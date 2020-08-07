@@ -14,8 +14,19 @@ class Category extends Model
      */
     protected $table = 'categories';
 
+    public $fillable = ['parent_id', 'name'];
+
     public function products()
     {
         return $this->belongsToMany(Product::class);
+    }
+
+    /**
+     * Get the index name for the model.
+     *
+     * @return string
+    */
+    public function childs() {
+        return $this->hasMany('App\Category','parent_id','id');
     }
 }

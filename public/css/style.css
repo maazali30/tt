@@ -7027,7 +7027,7 @@ ul.list-style-none li a:hover{color:#2962ff}
 }
 .table-box{display:table;width:100%}
 .cell{display:table-cell;vertical-align:middle}
-.table th,.table thead th{font-weight:500}
+.table th,.table thead th{font-weight:600}
 .nowrap{white-space:nowrap}
 .lite-padding td{padding:5px}
 .v-middle td,.v-middle th{vertical-align:middle}

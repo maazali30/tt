@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Category;
+use App\Category;
 
 class CategoryService
 {
@@ -13,12 +13,11 @@ class CategoryService
     public function saveCategory($request, $category)
     {
         $category->name = $request->name;
-        $category->save();
-  
+        
         if ($request->category_id) {
-            $parentCategory = Category::find($request->category_id);
-            $category->makeChildOf($parentCategory);
+            $category->parent_id = $request->category_id;
         }
+        $category->save();
     }
 
     public function buildTree(){
@@ -31,8 +30,7 @@ class CategoryService
         return $tree;
     }
 
-    private function buildCategoryPath($node, $data = [])
-    {
+    private function buildCategoryPath($node, $data = []){
 
         if (!$node->children->count()) {
             $data = ['name' => $node->name, 'id' => $node->id];
@@ -49,8 +47,7 @@ class CategoryService
         }
     }
 
-    public function deleteCategory($id)
-    {
+    public function deleteCategory($id){
         $category = Category::find($id);
         $category->delete();
     }

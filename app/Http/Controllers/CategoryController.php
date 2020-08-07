@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,20 +16,37 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function create(Request $request)
     {
-        $categories = Category::orderBy('id');
-
-        return $categories->paginate(50);
+        $productCategories = Category::all();
+        
+        $params = [
+            'title' => 'Add New Category',
+            'productCategories' => $productCategories,
+        ];
+        return view('categories.create')->with($params);
     }
 
-    public function store(CategoryRequest $request)
+    public function index()
     {
+        $categories = Category::where('parent_id',NULL)->get();
+
+        $params = [
+            'title' => 'Categories Listing',
+            'categories' => $categories,
+        ];
+        return view('categories.view')->with($params);
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request);
+
         $category = new Category();
 
         $this->categoryService->saveCategory($request, $category);
 
-        return response($category, Response::HTTP_CREATED);
+        return redirect()->route('category.index')->with('success', "The product <strong>$category->name</strong> has successfully been created.");
     }
 
     public function show($id)
@@ -38,18 +54,44 @@ class CategoryController extends Controller
         return Category::findOrFail($id);
     }
 
-    public function update(CategoryRequest $request, $id)
+    public function edit($id)
+    {
+        try
+        {
+            $productCategories = Category::all();
+            $category = Category::findOrFail($id);
+
+            $params = [
+                'productCategories' => $productCategories,
+                'category' => $category
+            ];
+            return view('categories.edit')->with($params);
+        }
+        catch (ModelNotFoundException $ex) 
+        {
+            if ($ex instanceof ModelNotFoundException)
+            {
+                return response()->view('errors.'.'404');
+            }
+        }
+    }
+
+    public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
 
         $this->categoryService->saveCategory($request, $category);
 
-        return response($category, Response::HTTP_CREATED);
+        return redirect()->route('category.index')->with('success', "The product <strong>$category->name</strong> has successfully been updated.");
+
+        // return response($category, Response::HTTP_CREATED);
     }
 
     public function destroy($id)
     {
        $this->categoryService->deleteCategory($id);
+
+       return redirect()->route('category.index')->with('success', "The category has deleted successfully.");
     }
 
     public function categoryProducts($id)

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Category;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -45,16 +46,16 @@ class ProductController extends Controller
      * @param ProductRequest $request
      * @return Response
      */
-    public function store(ProductRequest $request)
+    public function store(Request $request)
     {
         $product = new Product;
 
         if ($request->hasFile('avatar')) {
-            $fileName = str_random(30);
+            $fileName = Str::random(30);
             $extension = $request->avatar->extension();
             $fullFileName = "{$fileName}.{$extension}";
 
-            if ($request->avatar->storeAs('public/avatars', $fullFileName)) {
+            if ($request->avatar->storeAs('public/images/inventory', $fullFileName)) {
                 $product->avatar = $fullFileName;
             }else{
                 $product->avatar = "product.jpg";
@@ -68,7 +69,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        $categories = $request->input('categories');
+        $categories = $request->input('category_id');
         
         $counter = 0; 
         $categories_list = '';
@@ -76,7 +77,6 @@ class ProductController extends Controller
             if( $counter == 0 ){
                 $categories_list = $value;
             }else{
-                $categories .= ", " .  $value;
                 $categories_list .= ", " .  $value;
             }
             $counter++;
@@ -85,9 +85,7 @@ class ProductController extends Controller
         $category = Category::find([$categories_list]); // [1, 2]
         $product->categories()->attach($category);
 
-        return 'Success';
-
-        // ===
+        return redirect()->route('product.index')->with('success', "The product <strong>$product->name</strong> has successfully been created.");
     }
 
 
@@ -100,35 +98,113 @@ class ProductController extends Controller
        return view('products.show', compact('product'));
     }
 
-    // /**
-    //  * Update specific product
-    //  *
-    //  * @param ProductRequest $request
-    //  * @param $id
-    //  * @return Response
-    //  */
-    // public function update(ProductRequest $request, $id)
-    // {
-    //     $product = Product::findOrFail($id);
+    public function edit($id)
+    {
+        try
+        {
+            $productCategories = Category::all();
+            $product = Product::findOrFail($id);
 
-    //     if ($request->hasFile('avatar')) {
-    //         $this->productService->deleteCurrentAvatar($product);
-    //         $this->productService->uploadAvatar($request, $product);
-    //     }
+            foreach($product->categories as $cat) {
+                $currentCats[] = $cat->pivot->category_id;
+            }
 
-    //     $this->productService->saveProduct($request, $product);
+            $params = [
+                'productCategories' => $productCategories,
+                'product' => $product,
+                'currentCats' => $currentCats,
+            ];
+            return view('products.edit')->with($params);
+        }
+        catch (ModelNotFoundException $ex) 
+        {
+            if ($ex instanceof ModelNotFoundException)
+            {
+                return response()->view('errors.'.'404');
+            }
+        }
+    }
 
-    //     return response($product, Response::HTTP_CREATED);
-    // }
+    /**
+     * Update specific product
+     *
+     * @param ProductRequest $request
+     * @param $id
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
 
-    // public function destroy($id)
-    // {
-    //     $product = Product::findOrFail($id);
+        if ($request->hasFile('avatar')) {
+            $currentAvatar = $product->avatar;
 
-    //     $this->productService->deleteCurrentAvatar($product);
+            if($currentAvatar) {
+                $file = "public/images/inventory/{$currentAvatar}";
 
-    //     Product::destroy($id);
-    // }
+                if(Storage::exists($file)) {
+                    Storage::delete($file);
+                }
+            }
+
+            $fileName = Str::random(30);
+            $extension = $request->avatar->extension();
+            $fullFileName = "{$fileName}.{$extension}";
+
+            if ($request->avatar->storeAs('public/images/inventory', $fullFileName)) {
+                $product->avatar = $fullFileName;
+            }else{
+                $product->avatar = "product.jpg";
+            }
+        }
+
+        $product->name = $request->name;
+        $product->description = $request->description;
+
+        $product->save();
+
+        $categories = $request->input('category_id');
+        
+        $counter = 0; 
+        $categories_list = '';
+        foreach ($categories as $key => $value) {
+            if( $counter == 0 ){
+                $categories_list = $value;
+            }else{
+                // $categories .= ", " .  $value;
+                $categories_list .= ", " .  $value;
+            }
+            $counter++;
+        }
+
+        $category = Category::find([$categories_list]);
+        $product->categories()->sync($category);
+
+        return redirect()->route('product.index')->with('success', "The product <strong>$product->name</strong> has successfully been updated.");
+
+        // return response($product, Response::HTTP_CREATED);
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $currentAvatar = $product->avatar;
+
+        if($currentAvatar) {
+            $file = "public/images/inventory/{$currentAvatar}";
+
+            if(Storage::exists($file)) {
+                Storage::delete($file);
+            }
+        }
+
+        $product->categories()->detach();
+
+        Product::destroy($id);
+
+        return redirect()->route('product.index')->with('success', "The product has deleted successfully.");
+    }
 
 
     public function removeCategory(Product $product)
