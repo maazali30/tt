@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Category;
+use App\Location;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -14,10 +15,12 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $productCategories = Category::all();
+        $productLocations = Location::all();
         
         $params = [
             'title' => 'Add New Product',
             'productCategories' => $productCategories,
+            'productLocations' => $productLocations,
         ];
         return view('products.create')->with($params);
     }
@@ -66,6 +69,7 @@ class ProductController extends Controller
 
         $product->name = $request->name;
         $product->description = $request->description;
+        $product->location_id = $request->location_id;
 
         $product->save();
 
@@ -103,6 +107,7 @@ class ProductController extends Controller
         try
         {
             $productCategories = Category::all();
+            $productLocations = Location::all();
             $product = Product::findOrFail($id);
 
             foreach($product->categories as $cat) {
@@ -111,6 +116,7 @@ class ProductController extends Controller
 
             $params = [
                 'productCategories' => $productCategories,
+                'productLocations' => $productLocations,
                 'product' => $product,
                 'currentCats' => $currentCats,
             ];
@@ -160,6 +166,7 @@ class ProductController extends Controller
 
         $product->name = $request->name;
         $product->description = $request->description;
+        $product->location_id = $request->location_id;
 
         $product->save();
 

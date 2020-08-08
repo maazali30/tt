@@ -27,4 +27,14 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function location()
+    {
+        return $this->belongsTo('App\Location');
+    }
+
+    public function task()
+    {
+        return $this->hasOne('App\Task','product_id');
+    }
 }

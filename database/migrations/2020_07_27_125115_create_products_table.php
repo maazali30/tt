@@ -19,8 +19,11 @@ class CreateProductsTable extends Migration
             $table->string('name', 255);
             $table->text('description')->nullable();
             $table->string('avatar', 255)->default('product.jpg');
+            $table->foreignId('location_id');
 
             $table->timestamps();
+
+            $table->foreign('location_id')->references('id')->on('locations');
 
         });
     }

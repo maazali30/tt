@@ -32,6 +32,21 @@ Route::delete('product/{product}', 'ProductController@destroy')->name('product.d
 Route::put('product/{product}', 'ProductController@edit')->name('product.edit');
 Route::get('category/product/{product}', 'ProductController@removeCategory')->name('category.product.delete');
 
+
+// Manage Employees
+
+Route::get('employees', 'EmployeeController@index')->name('employee.index');
+Route::get('employee/create', 'EmployeeController@create')->name('employee.create');
+Route::post('employee/store', 'EmployeeController@store')->name('employee.store');
+Route::post('employee/update/{employee}', 'EmployeeController@update')->name('employee.update');
+Route::get('employee/{employee}', 'EmployeeController@show')->name('employee.show');
+Route::delete('employee/{employee}', 'EmployeeController@destroy')->name('employee.destroy');
+Route::put('employee/{employee}', 'EmployeeController@edit')->name('employee.edit');
+Route::get('category/employee/{employee}', 'EmployeeController@removeCategory')->name('category.employee.delete');
+
+Route::get('task/getEmpByProd/{id}','EmployeeController@getEmpByProd');
+
+
 // Manage Categories
 
 Route::get('categories', 'CategoryController@index')->name('category.index');
@@ -41,3 +56,25 @@ Route::post('category/update/{category}', 'CategoryController@update')->name('ca
 Route::get('category/{category}', 'CategoryController@show')->name('category.show');
 Route::delete('category/{category}', 'CategoryController@destroy')->name('category.destroy');
 Route::put('category/{category}', 'CategoryController@edit')->name('category.edit');
+
+// Manage Locations
+
+Route::get('locations', 'LocationController@index')->name('location.index');
+Route::get('location/create', 'LocationController@create')->name('location.create');
+Route::post('location/store', 'LocationController@store')->name('location.store');
+Route::post('location/update/{location}', 'LocationController@update')->name('location.update');
+Route::get('location/{location}', 'LocationController@show')->name('location.show');
+Route::delete('location/{location}', 'LocationController@destroy')->name('location.destroy');
+Route::put('location/{location}', 'LocationController@edit')->name('location.edit');
+
+
+// Manage Tasks
+
+Route::get('tasks', 'TaskController@index')->name('task.index');
+Route::get('task/create', 'TaskController@create')->name('task.create');
+Route::post('task/store', 'TaskController@store')->name('task.store');
+Route::post('task/update/{task}', 'TaskController@update')->name('task.update');
+Route::get('task/{task}', 'TaskController@show')->name('task.show');
+Route::delete('task/{task}', 'TaskController@destroy')->name('task.destroy');
+Route::put('task/{task}', 'TaskController@edit')->name('task.edit');
+Route::get('category/task/{task}', 'TaskController@removeCategory')->name('category.task.delete');
