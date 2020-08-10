@@ -26,6 +26,11 @@ class Category extends Model
      *
      * @return string
     */
+    
+    public function parent() { 
+        return $this->belongsTo('App\Category', 'parent_id','id');
+    }
+
     public function childs() {
         return $this->hasMany('App\Category','parent_id','id');
     }
