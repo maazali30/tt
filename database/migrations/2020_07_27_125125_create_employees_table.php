@@ -18,6 +18,8 @@ class CreateEmployeesTable extends Migration
 
             $table->string('name', 255);
             $table->text('description')->nullable();
+            $table->text('designation')->nullable();
+            $table->text('phone')->nullable();
             $table->string('avatar', 255)->default('employee.jpg');
 
             $table->timestamps();

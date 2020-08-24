@@ -21,7 +21,7 @@ class Employee extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'avatar'
+        'name', 'description', 'designation', 'phone', 'avatar'
     ];
 
     public function categories()

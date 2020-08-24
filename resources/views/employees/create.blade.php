@@ -27,6 +27,26 @@
                         </div>
                     </div>
 
+                    <div class="form-group row {{ $errors->has('designation') ? ' has-error' : '' }}">
+                        <label for="designation" class="col-sm-3 text-right control-label col-form-label">Employee Designation</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Employee Designation" value="{{ Request::old('designation') ?: '' }}" required>
+                            @if ($errors->has('designation'))
+                              <span class="help-block">{{ $errors->first('designation') }}</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row {{ $errors->has('phone') ? ' has-error' : '' }}">
+                        <label for="phone" class="col-sm-3 text-right control-label col-form-label">Employee Phone</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Employee Phone" value="{{ Request::old('phone') ?: '' }}" required>
+                            @if ($errors->has('phone'))
+                              <span class="help-block">{{ $errors->first('phone') }}</span>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="form-group row {{ $errors->has('avatar') ? ' has-error' : '' }}">
                         <label for="avatar" class="col-sm-3 text-right control-label col-form-label">Employee Photo</label>
                         <div class="col-sm-9">

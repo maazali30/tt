@@ -14,6 +14,8 @@
                                   <th>ID</th>
                                   <th>Name</th>
                                   <th>Description</th>
+                                  <th>Designation</th>
+                                  <th>Phone</th>
                                   <th>Domain</th>
                                   <th>Photo</th>
                                   <th>Action</th>
@@ -26,6 +28,8 @@
                                       <td>{{ $employee->id }}</td>
                                       <td>{{ $employee->name }}</td>
                                       <td>{{ $employee->description }}</td>
+                                      <td>{{ $employee->designation }}</td>
+                                      <td>{{ $employee->phone }}</td>
                                       <td>
                                           <ol>
                                             @foreach($employee->categories as $category)

@@ -65,14 +65,16 @@ class EmployeeController extends Controller
             $employee->avatar = "profile.jpg";
         }
 
-        $employee->name = $request->name;
-        $employee->description = $request->description;
+        $employee->name         = $request->name;
+        $employee->description  = $request->description;
+        $employee->designation  = $request->designation;
+        $employee->phone        = $request->phone;
 
         $employee->save();
 
         $categories = $request->input('category_id');
         
-        $counter = 0; 
+        $counter = 0;
         $categories_list = '';
         foreach ($categories as $key => $value) {
             if( $counter == 0 ){
@@ -161,7 +163,9 @@ class EmployeeController extends Controller
 
         $employee->name = $request->name;
         $employee->description = $request->description;
-
+        $employee->designation  = $request->designation;
+        $employee->phone        = $request->phone;
+        
         $employee->save();
 
         $categories = $request->input('category_id');
