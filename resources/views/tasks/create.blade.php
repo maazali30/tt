@@ -55,7 +55,7 @@
                     <div class="form-group m-b-0">
                       <div class="offset-sm-3 col-sm-9">
                           <input type="hidden" name="_token" value="{{ Session::token() }}">
-                          <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Submit Form</button>
+                          <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Submit Task</button>
                           <a href="{{route('task.index')}}" class="btn btn-inverse waves-effect waves-light m-t-10">Cancel</a>
                       </div>
                   </div>

@@ -19,6 +19,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+    <link href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('public/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('public/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('public/favicon-16x16.png') }}">
@@ -51,7 +53,7 @@
                             <a class="nav-link" href="{{ route('location.index') }}">{{ __('Locations') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('product.index') }}">{{ __('Products') }}</a>
+                            <a class="nav-link" href="{{ route('product.index') }}">{{ __('Inventory') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('employee.index') }}">{{ __('Employees') }}</a>
@@ -99,4 +101,14 @@
         </main>
     </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+
 </html>
