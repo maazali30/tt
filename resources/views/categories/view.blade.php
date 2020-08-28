@@ -11,7 +11,7 @@
                       <table id="myTable" class="table table-bordered table-striped">
                           <thead>
                               <tr>
-                                  <th>ID</th>
+                                  <th>S.No.</th>
                                   <th>Name</th>
                                   <th>Action</th>
                               </tr>
@@ -20,7 +20,7 @@
                               @if(count($categories))
                                   @foreach($categories as $category)
                                   <tr>
-                                      <td>{{ $category->id }}</td>
+                                      <td>{{ $loop->iteration }}</td>
                                       <td>
                                         <!-- <ul>
                                           <li> -->
