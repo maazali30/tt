@@ -43,7 +43,7 @@
                                       <td>{{ $task->description }}</td>
                                       <td>
                                           @foreach($task->employees as $employee)
-                                            {{ $employee->name }}
+                                            <span>{{ $employee->name }}</span>
                                           @endforeach
                                       </td>
                                       <td>

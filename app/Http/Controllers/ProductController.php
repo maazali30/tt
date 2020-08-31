@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Category;
 use App\Location;
+use App\Task;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -44,15 +45,17 @@ class ProductController extends Controller
     }
 
 
-public function inventory_detail(Request $request)
+    public function inventory_detail($id)
     {
-        // $products = Product::orderBy('id');
+        $product = Product::findOrFail($id);
+        $tasks = Task::where('product_id', $id)->get();
 
-        $products = Product::all();
+        // dd($tasks);
 
         $params = [
-            'title' => 'Products Listing',
-            'products' => $products,
+            'title' => 'Inventory Details',
+            'product' => $product,
+            'tasks' => $tasks
         ];
         return view('products.inventory-detail')->with($params);
     }

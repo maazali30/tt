@@ -15,7 +15,7 @@ class Category extends Model
     protected $table = 'categories';
 
     public $fillable = ['parent_id', 'name'];
-
+    
     public function products()
     {
         return $this->belongsToMany(Product::class);

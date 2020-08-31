@@ -93,12 +93,16 @@ class EmployeeController extends Controller
 
 
 
-
-
-
-    public function show(Employee $employee)
+    public function show($id)
     {
-       return view('employees.show', compact('employee'));
+        $employee = Employee::findOrFail($id);
+
+        $params = [
+            'title' => 'Employee Details',
+            'employee' => $employee
+        ];
+
+        return view('employees.show')->with($params);
     }
 
     public function edit($id)

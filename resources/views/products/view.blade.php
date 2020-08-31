@@ -26,7 +26,11 @@
 
                                   <tr>
                                       <td>{{ $product->id }}</td>
-                                      <td>{{ $product->name }}</td>
+                                      <td>
+                                        <a href="{{route('product.show',$product->id)}}">
+                                          {{ $product->name }}
+                                        </a>
+                                      </td>
                                       <td>{{ $product->description }}</td>
                                       <td>
                                             @foreach($product->categories as $category)

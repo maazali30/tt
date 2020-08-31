@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('product/{product}', 'ProductController@destroy')->name('product.destroy');
 	Route::put('product/{product}', 'ProductController@edit')->name('product.edit');
 	Route::get('category/product/{product}', 'ProductController@removeCategory')->name('category.product.delete');
-	Route::get('/inventory-detail', 'ProductController@inventory_detail')->name('inventory-detail');
+	Route::get('/inventory-detail/{id}', 'ProductController@inventory_detail')->name('product.show');
 
 
 	// Manage Employees
@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('employee/{employee}', 'EmployeeController@destroy')->name('employee.destroy');
 	Route::put('employee/{employee}', 'EmployeeController@edit')->name('employee.edit');
 	Route::get('category/employee/{employee}', 'EmployeeController@removeCategory')->name('category.employee.delete');
+	Route::get('employee/show/{id}', 'EmployeeController@show')->name('employee.show');
 
 	// Manage Categories
 
