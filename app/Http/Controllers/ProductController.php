@@ -43,6 +43,20 @@ class ProductController extends Controller
         return view('products.view')->with($params);
     }
 
+
+public function inventory_detail(Request $request)
+    {
+        // $products = Product::orderBy('id');
+
+        $products = Product::all();
+
+        $params = [
+            'title' => 'Products Listing',
+            'products' => $products,
+        ];
+        return view('products.inventory-detail')->with($params);
+    }
+
     /**
      * Create a new product
      *

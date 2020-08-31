@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('product/{product}', 'ProductController@destroy')->name('product.destroy');
 	Route::put('product/{product}', 'ProductController@edit')->name('product.edit');
 	Route::get('category/product/{product}', 'ProductController@removeCategory')->name('category.product.delete');
+	Route::get('/inventory-detail', 'ProductController@inventory_detail')->name('inventory-detail');
 
 
 	// Manage Employees
